@@ -1,11 +1,15 @@
 #todo_container {
     // position: absolute;
-    top: 70px;
-    left: 5px;
+    // top: 70px;
+    // left: 5px;
     background-color: rgba(113,113,113,0.7);
-    width: 200px;
+    width: 350px;
     min-height: 200px;
     text-align: center;
+    padding: 10px;
+}
+#datepicker {
+    width: 60px;
 }
 #todo-list {
 	text-align: left;
