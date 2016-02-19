@@ -7,8 +7,8 @@ $(document).ready(function() {
 	var todoList = ('#todo-list');
 	// var todo_item = new Create_todo_item();
 	// console.log( todo_item );
-	$('#todoEnter').val("SET VALUE");
-	testData = "";
+	// $('#todoEnter').val("SET VALUE");
+
 
 	function Create_todo_item(todo) {
 		this.todo 		= todo;
@@ -48,7 +48,7 @@ $(document).ready(function() {
 		var newItem = listItemHelper.replace('%data%', arg.todo)
 			.replace('%dueDate%', arg.dueDate)
 			.replace('%done%', arg.completed);
-		$(todoList).append(newItem);
+		$(todoList).prepend(newItem);
 
 		// logItems(arg);
 	}
@@ -77,7 +77,10 @@ $(document).ready(function() {
 	function loadTodo() {
 		console.log("loadTodo");
 		var getItems = JSON.parse(localStorage.getItem(storageEnv) );
-		for (var i = 0; i < getItems.length; i++) {
+		// for (var i = 0; i < getItems.length; i++) {
+		// 	addItem(getItems[i]);
+		// }
+		for (var i = getItems.length - 1; i >= 0; i--) {
 			addItem(getItems[i]);
 		}
 		refreshClicks();
@@ -94,13 +97,13 @@ $(document).ready(function() {
 	}
 
 	function pageLoad() {
-		testData = loadTodo();
+		var pageLoadData = loadTodo();
 		$( '#datepicker' ).datepicker({
 		  defaultDate: +7,
 		  nextText: 'Later'
 		});
 		console.log('Page Load');
-		console.log( JSON.parse(localStorage.getItem(storageEnv)  ));
+		console.log( pageLoadData  );
 	}
 
 pageLoad();
