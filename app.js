@@ -1,7 +1,7 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
 $(document).ready(function() {
 
-var storageEnv = 'dashMe_todos_dev';
+ var storageEnv = 'dashMe_todos_dev';
 
 	var listItemHelper = '<li class="todo-item" data-due="%dueDate%" data-done="%done%">%data% | <a href="#" class="done-btn">Done</a> | <a href="#" class="del-btn">Delete</a></li>';
 	var todoList = ('#todo-list');
@@ -27,28 +27,38 @@ var storageEnv = 'dashMe_todos_dev';
 	}
 
 	function refreshClicks() {
+
 		$('.done-btn').click(function(e) {
 			e.preventDefault();
-			console.log($(this).parent());
-			console.log( 'Done Button Clicked ' );
+			// console.log($(this).parent());
+			// console.log( 'Done Button Clicked ' );
 			$(this).parent().toggleClass( 'done-item' );
 		});
 
 		$('.del-btn').click(function(e) {
 			e.preventDefault();
 			console.log( 'Delete Button Clicked ' );
+			deleteItem($(this).parent().index());
 			$(this).parent().remove();
 		});
 	}
 
 	function addItem(arg) {
-		console.log(" addItem function")
+		console.log(" addItem function");
 		var newItem = listItemHelper.replace('%data%', arg.todo)
 			.replace('%dueDate%', arg.dueDate)
 			.replace('%done%', arg.completed);
 		$(todoList).append(newItem);
-		refreshClicks();
-		logItems(arg);
+
+		// logItems(arg);
+	}
+
+	function deleteItem(arg) {
+		console.log(" Delete function");
+		var getItems = JSON.parse(localStorage.getItem(storageEnv) );
+		getItems.splice(arg, 1);
+		localStorage.setItem(storageEnv, JSON.stringify(getItems) );
+
 	}
 
 	$('#add-btn').click(function(e) {
@@ -56,62 +66,47 @@ var storageEnv = 'dashMe_todos_dev';
 		var newTodoVal = $('#todoEnter').val();
 		if (newTodoVal === '') { return false; }
 		var todo_item = new Create_todo_item(newTodoVal);
+
+		$(todoList).children().remove();
 		addItem(todo_item);
-		// saveTodo(todo_item);
+		saveTodo(todo_item);
 		$('#todoEnter').val("");
 		refreshClicks();
 	});
 
-	// $('#add-btn').click(function(e) {
-	// 	e.preventDefault();
-	// });
-
 	function loadTodo() {
 		console.log("loadTodo");
-		// var itemArray = [];
-		// TODO: find local storage todo's
-		// var todo_itemTest1 = new Create_todo_item('Test todo item 1');
-		// var todo_itemTest2 = new Create_todo_item('Test todo item 2');
-		// var todo_itemTest3 = new Create_todo_item('Test todo item 3');
-		// itemArray.push(todo_itemTest1,todo_itemTest2,todo_itemTest3);
-
-		// logItems(itemArray);
 		var getItems = JSON.parse(localStorage.getItem(storageEnv) );
 		for (var i = 0; i < getItems.length; i++) {
 			addItem(getItems[i]);
 		}
+		refreshClicks();
 		return getItems;
 	}
 
-	function saveTodo(newToDo) {
+	function saveTodo(itemArg) {
 		console.log("saveTodo");
 		var localData = loadTodo();
+		if (localData.length === 0) { localData = []; }
 
-		if (localData.length === 0) {
-			localData = [];
-		}
-		// logItems(localData);
-		localData.push( newToDo );
+		localData.push( itemArg );
 		localStorage.setItem(storageEnv, JSON.stringify(localData) );
-		console.log("SaveTodo load: ---------->\n" + localStorage.getItem(storageEnv)  );
 	}
 
 	function pageLoad() {
-		// var blnk = $('#todoEnter').val();
-		// saveTodo("Deveolpment");
 		testData = loadTodo();
-
 		$( '#datepicker' ).datepicker({
 		  defaultDate: +7,
 		  nextText: 'Later'
 		});
 		console.log('Page Load');
-		// console.log(localStorage.getItem(storageEnv)  );
+		console.log( JSON.parse(localStorage.getItem(storageEnv)  ));
 	}
 
-
-
 pageLoad();
-// localStorage.setItem("todoData", JSON.stringify(data));
-// localStorage.setItem('dashMe_todos', JSON.stringify(todo_item) );
+
+	// $('#add-btn').click(function(e) {
+	// 	e.preventDefault();
+	// });
+
 });
