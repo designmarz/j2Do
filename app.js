@@ -3,7 +3,7 @@ $(document).ready(function() {
 
  var storageEnv = 'dashMe_todos_dev';
 
-	var listItemHelper = '<li class="todo-item" data-due="%dueDate%" data-done="%done%">%data% | <a href="#" class="done-btn">Done</a> | <a href="#" class="del-btn">Delete</a></li>';
+	var listItemHelper = '<li class="todo-item" data-due="%dueDate%" data-done="%done%">%data% <span class="todo-item-controls"> <input type=checkbox class="done-btn"></input>  <a href="#" class="del-btn">Delete</a><span></li>';
 	var todoList = ('#todo-list');
 	// var todo_item = new Create_todo_item();
 	// console.log( todo_item );
@@ -28,19 +28,56 @@ $(document).ready(function() {
 
 	function refreshClicks() {
 
-		$('.done-btn').click(function(e) {
-			e.preventDefault();
-			// console.log($(this).parent());
-			// console.log( 'Done Button Clicked ' );
-			$(this).parent().toggleClass( 'done-item' );
+		$('.done-btn').click(function() {
+			// e.preventDefault();
+			console.log($(this).parent());
+			console.log( 'Done Button Clicked ' );
+			var itemIndex = $(this).parent().parent().index();
+			console.log( itemIndex);
+			$(this).parent().parent().toggleClass( 'done-item' );
+
+				var state = 'false';
+			if ( $(this).parent().parent().attr('data-done') === 'false') {
+				$(this).parent().parent().attr('data-done', 'true');
+				state = 'true';
+				console.log( state );
+				updateItem( itemIndex, state);
+			} else if ( $(this).parent().parent().attr('data-done') === 'true') {
+				$(this).parent().parent().attr('data-done', 'false');
+				state = 'false';
+				console.log( state );
+				updateItem( itemIndex, state);
+			}
+
+			console.log( 'Done State ' + state );
+
+
 		});
 
 		$('.del-btn').click(function(e) {
 			e.preventDefault();
 			console.log( 'Delete Button Clicked ' );
-			deleteItem($(this).parent().index());
-			$(this).parent().remove();
+			var itemIndex = $(this).parent().parent().index();
+			deleteItem( itemIndex );
+			$(this).parent().parent().fadeOut( "slow", function() {
+    			$(this).remove();
+  				});
 		});
+
+
+	}
+	 function uiUpdates() {
+		var upDateItems = $('.todo-item');
+
+		for (var i = upDateItems.length - 1; i >= 0; i--) {
+			// upDateItems[i]
+
+			if ( $(upDateItems).eq(i).attr('data-done') === 'true' ) {
+				console.log( 'Item Done:' +  $(upDateItems).eq(i).find('input').attr('checked') );
+				$(upDateItems).eq(i).find('input').attr('checked','checked');
+				$(upDateItems).eq(i).addClass('done-item')
+			}
+		}
 	}
 
 	function addItem(arg) {
@@ -49,7 +86,6 @@ $(document).ready(function() {
 			.replace('%dueDate%', arg.dueDate)
 			.replace('%done%', arg.completed);
 		$(todoList).prepend(newItem);
-
 		// logItems(arg);
 	}
 
@@ -60,6 +96,15 @@ $(document).ready(function() {
 		localStorage.setItem(storageEnv, JSON.stringify(getItems) );
 
 	}
+	function updateItem(arg, state) {
+		var getItems = JSON.parse(localStorage.getItem(storageEnv) );
+		console.log ('Update Item: ' + state);
+		getItems[arg].completed = state;
+		console.log (getItems[arg].completed);
+		localStorage.setItem(storageEnv, JSON.stringify(getItems) );
+		console.log (getItems);
+		// return getItems;
+	}
 
 	$('#add-btn').click(function(e) {
 		e.preventDefault();
@@ -69,13 +114,13 @@ $(document).ready(function() {
 
 		$(todoList).children().remove();
 		addItem(todo_item);
-		saveTodo(todo_item);
+		saveItems(todo_item);
 		$('#todoEnter').val("");
 		refreshClicks();
+		uiUpdates();
 	});
 
-	function loadTodo() {
-		console.log("loadTodo");
+	function loadItems() {
 		var getItems = JSON.parse(localStorage.getItem(storageEnv) );
 		// for (var i = 0; i < getItems.length; i++) {
 		// 	addItem(getItems[i]);
@@ -84,29 +129,29 @@ $(document).ready(function() {
 			addItem(getItems[i]);
 		}
 		refreshClicks();
+		uiUpdates();
 		return getItems;
 	}
 
-	function saveTodo(itemArg) {
-		console.log("saveTodo");
-		var localData = loadTodo();
+	function saveItems(itemArg) {
+		var localData = loadItems();
 		if (localData.length === 0) { localData = []; }
 
 		localData.push( itemArg );
 		localStorage.setItem(storageEnv, JSON.stringify(localData) );
 	}
 
-	function pageLoad() {
-		var pageLoadData = loadTodo();
+	$(function pageLoad() {
+		var pageLoadData = loadItems();
 		$( '#datepicker' ).datepicker({
 		  defaultDate: +7,
 		  nextText: 'Later'
 		});
-		console.log('Page Load');
-		console.log( pageLoadData  );
-	}
+		logItems(pageLoadData);
+		console.log(   );
+	});
 
-pageLoad();
+// pageLoad();
 
 	// $('#add-btn').click(function(e) {
 	// 	e.preventDefault();

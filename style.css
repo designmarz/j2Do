@@ -1,4 +1,8 @@
-#todo_container {
+body {
+	font-family: sans-serif;
+	font-size: 10px;
+}
+#todo-container {
     // position: absolute;
     // top: 70px;
     // left: 5px;
@@ -6,7 +10,18 @@
     width: 350px;
     min-height: 200px;
     text-align: center;
-    padding: 10px;
+    // padding: 10px;
+}
+.todo-controls {
+    height: 2rem;
+    background-color: rgba(240, 248, 255, 0.46);
+    padding: 1rem 0 0;
+    font-size: 1rem;
+}
+
+a {
+	color: #158CBA;
+	text-decoration: none !important;
 }
 #datepicker {
     width: 60px;
@@ -14,13 +29,26 @@
 #todo-list {
 	text-align: left;
 }
+.todo-item-controls {
+	float: right;
+	padding-right: 10px;
+}
 
 .done-item {
     text-decoration: line-through;
 }
 
-a {
-    color: #158CBA;
-    text-decoration: none;
+li.todo-item a {
+
+    // color: #158CBA;
+    text-decoration: none !important;
+    // float: right;
+    // padding-right: 10px;
 }
 
+li.todo-item {
+	font-size: 1rem;
+    padding: 5px;
+    list-style: none;
+    margin-left: -27px;
+}
