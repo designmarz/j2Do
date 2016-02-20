@@ -1,6 +1,13 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
 $(document).ready(function() {
 
+// function weatherIconSet() {
+// 	var weatherText = $('svg.image').text();
+// 	$('svg.image').css('background', 'URL("/assets/svg/'+weatherText+'.svg")');
+// 	$('svg.image').css('background', 'URL("/assets/svg/'+weatherText+'.svg")');
+
+// }
+
  var storageEnv = 'dashMe_todos_dev';
 
 	var listItemHelper = '<li class="todo-item" data-due="%dueDate%" data-done="%done%">%data% <span class="todo-item-controls"> <input type=checkbox class="done-btn"></input>  <a href="#" class="del-btn">Delete</a><span></li>';
@@ -75,7 +82,7 @@ $(document).ready(function() {
 			if ( $(upDateItems).eq(i).attr('data-done') === 'true' ) {
 				console.log( 'Item Done:' +  $(upDateItems).eq(i).find('input').attr('checked') );
 				$(upDateItems).eq(i).find('input').attr('checked','checked');
-				$(upDateItems).eq(i).addClass('done-item')
+				$(upDateItems).eq(i).addClass('done-item');
 			}
 		}
 	}
